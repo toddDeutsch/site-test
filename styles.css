@@ -270,12 +270,13 @@ p.new-stanza { margin-top: 1lh; } /* p. so it beats the margin reset above */
     height: 100%;
   }
 
-  /* Galleries: a plate (824) plus 73 + 73 margins fills the height */
+  /* Galleries: plates (824 of the 970 under the header) are centred in the
+     whole window, not just the area under the header, but never tuck under it */
   .gallery {
     --u: calc((100dvh - var(--bar-h)) / 970);
     flex-direction: row;
-    align-items: center;
-    padding: 0 calc(73 * var(--u));
+    align-items: flex-start;
+    padding: max(0px, (100dvh - 824 * var(--u)) / 2 - var(--bar-h)) calc(73 * var(--u)) 0;
   }
   .gallery > * { flex: none; }
   /* photos keep their own shape at plate height, so the gap is the same around portraits */
