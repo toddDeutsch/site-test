@@ -177,9 +177,13 @@ footer.bar .menu { top: auto; bottom: 100%; }
   vertical-align: top;
 }
 
-/* photos sit whole inside the plate frame (portraits get white side margins, as in Figma) */
+/* photos keep their own shape at full plate width (portraits as wide as landscapes),
+   narrowing only so they are never taller than the window (svh: the smallest
+   mobile viewport, so a photo still fits with the browser toolbars showing) */
 .photo {
-  height: auto; /* ignore the height attribute; the plate's aspect ratio sets it */
+  width: min(calc(1242 * var(--u)), calc(100svh * var(--ar)));
+  height: auto; /* ignore the height attribute; aspect-ratio sets it */
+  aspect-ratio: var(--ar);
   background: none;
   object-fit: contain;
 }
