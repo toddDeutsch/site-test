@@ -257,12 +257,13 @@ p.new-stanza { margin-top: 1lh; } /* p. so it beats the margin reset above */
     overscroll-behavior-x: contain;
   }
 
-  /* Home: photo sections side by side, full height, flush like the stack */
+  /* Home: photo sections side by side, with a header-height band below so
+     the row sits centred in the window */
   .projects {
-    --u: calc((100dvh - var(--bar-h)) / 962);
+    --u: calc((100dvh - 2 * var(--bar-h)) / 962);
     flex-direction: row;
     gap: calc(72 * var(--u));
-    padding-inline: calc(72 * var(--u)); /* same gap before the first and after the last */
+    padding: 0 calc(72 * var(--u)) var(--bar-h); /* same gap before the first and after the last */
     container-type: size;
   }
   .project {
