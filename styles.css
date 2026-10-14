@@ -262,6 +262,7 @@ p.new-stanza { margin-top: 1lh; } /* p. so it beats the margin reset above */
     --u: calc((100dvh - var(--bar-h)) / 962);
     flex-direction: row;
     gap: calc(72 * var(--u));
+    padding-inline: calc(72 * var(--u)); /* same gap before the first and after the last */
     container-type: size;
   }
   .project {
