@@ -13,6 +13,7 @@ Every page gets <body class="h-layout">: on landscape screens 900px+ wide the
 narrower or portrait screens stack vertically with the footer (styles.css).
 """
 import os
+import re
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
@@ -20,10 +21,15 @@ NAV = [("index.html", "Home"), ("driftless.html", "Driftless"), ("between-rivers
        ("gamers.html", "gamers"), ("family-drift.html", "Family drift"), ("related-ideas.html", "related ideas"),
        ("about.html", "about")]
 
+# Projects left off the menus and the home page until they have photos.
+# Remove a slug here (and rebuild) to show it again; its gallery page is still built.
+HIDDEN = {"driftless"}
+
 def bar(tag, current):
     cur = ' aria-current="page"'
     items = "\n".join(
-        f'        <a href="{h}"{cur if h == current else ""}>{t}</a>' for h, t in NAV)
+        f'        <a href="{h}"{cur if h == current else ""}>{t}</a>'
+        for h, t in NAV if h.removesuffix(".html") not in HIDDEN)
     mid = f"{tag}-menu"
     return f'''  <{tag} class="bar">
     <a class="wordmark" href="index.html">Todd Deutsch</a>
@@ -195,5 +201,10 @@ open("about.html", "w").write(html)
 s = open("index.html").read()
 main = s[s.index("  <main"):s.index("</main>") + len("</main>")]
 main = main.replace('<main class="projects">', '<main class="projects" tabindex="0" aria-label="Projects">')
+# give HIDDEN projects' cards the hidden attribute (and take it off the rest)
+def hide_card(m):
+    tag = m.group(0).replace(" hidden>", ">")
+    return tag[:-1] + " hidden>" if m.group(1) in HIDDEN else tag
+main = re.sub(r'<a class="project[^>]* id="([^"]+)"[^>]*>', hide_card, main)
 html = head("Todd Deutsch", "family=Jost:wght@200&family=Julius+Sans+One") + bar("header", "index.html") + "\n\n" + main + "\n\n" + bar("footer", "index.html") + "\n" + TAIL
 open("index.html", "w").write(html)

@@ -107,6 +107,7 @@ footer.bar .menu { top: auto; bottom: 100%; }
   text-decoration: none;
 }
 .project--landing { aspect-ratio: 1433 / 956; }
+.project[hidden] { display: none; } /* HIDDEN in build.py */
 
 .project img {
   position: absolute;
