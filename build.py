@@ -113,15 +113,16 @@ IMAGES = {
 
 GALLERIES = [
     # slug, title, plate color (placeholders), statement card color, band color, title color, statement weight
-    # (Gamers and Related Ideas bands are the solid colors their old see-through bands showed over gray)
+    # (Gamers and Related Ideas bands are the solid colors their old see-through bands showed over gray;
+    # Between Rivers' band is the blue its old half-see-through band showed over the old blue card)
     ("driftless", "Driftless", "#d2d2d2", "#fff", "#ececec", "#000", None),
-    ("between-rivers", "Between Rivers", "#b7c3d1", "#b7c3d1", "rgba(181, 199, 214, 0.5)", "#000", None),
+    ("between-rivers", "Between Rivers", "#b7c3d1", "#fff", "#b6c5d4", "#000", None),
     ("gamers", "Gamers", "#717171", "#fff", "#38373d", "#fff", None),
     ("family-drift", "Family Drift", "#fff", "#fff", "#b0bdb6", "#000", None),
     ("related-ideas", "Related Ideas", "#7d7564", "#fff", "#39352f", "#fff", "700"),
 ]
 
-GALLERY_FONTS = "family=Intel+One+Mono:ital,wght@0,400;0,700;1,400&family=Jost:wght@200&family=Julius+Sans+One"
+GALLERY_FONTS = "family=Jost:ital,wght@0,200;0,300;0,700;1,300&family=Julius+Sans+One"
 
 def jpeg_size(path):
     """(width, height) read from a JPEG's frame header."""

@@ -206,9 +206,9 @@ footer.bar .menu { top: auto; bottom: 100%; }
 }
 .statement-text {
   padding: calc(33 * var(--u)) calc(97 * var(--u)) calc(109 * var(--u));
-  font-family: "Intel One Mono", monospace;
-  font-size: max(12px, calc(14 * var(--u)));
-  font-weight: var(--statement-weight, 400);
+  font-family: "Jost", sans-serif;
+  font-size: max(14px, calc(18 * var(--u)));
+  font-weight: var(--statement-weight, 300);
   color: #000;
 }
 .statement-text p,
