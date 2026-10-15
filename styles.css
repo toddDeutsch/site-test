@@ -259,7 +259,11 @@ p.new-stanza { margin-top: 1lh; } /* p. so it beats the margin reset above */
     overflow-x: auto;
     overflow-y: hidden;
     overscroll-behavior-x: contain;
+    cursor: grab; /* the row can be dragged sideways with a mouse (hscroll.js) */
   }
+  body.h-layout > main.dragging { cursor: grabbing; user-select: none; }
+  body.h-layout > main.dragging a { cursor: grabbing; }
+  .statement-text { user-select: none; } /* dragging the text moves the view (hscroll.js) */
 
   /* Home: photo sections side by side, with a header-height band below so
      the row sits centred in the window */
