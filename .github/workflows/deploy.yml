@@ -1,0 +1,44 @@
+# Publishes the site to SiteGround on every push to main.
+# The SiteGround server already has its own clone of this repo (it pulls with
+# the "homeSite" deploy key), so this just logs in over SSH and runs
+# `git pull` there. The built .html files are committed, so no build step.
+#
+# Repository secrets (Settings → Secrets and variables → Actions):
+#   SITEGROUND_SSH_KEY  private key (no passphrase) whose public half is
+#                       authorized in SiteGround's SSH Keys Manager
+#   SITEGROUND_HOST     SSH hostname from SiteGround's SSH Keys Manager
+#   SITEGROUND_PORT     SSH port (SiteGround uses 18765)
+#   SITEGROUND_USER     SSH username
+#   SITEGROUND_PATH     folder on the server that holds the clone, e.g.
+#                       www/example.com/public_html
+name: Deploy to SiteGround
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# One deploy at a time; let an in-progress deploy finish rather than cancel it
+concurrency:
+  group: siteground
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Pull main on the SiteGround server
+        env:
+          SSH_KEY: ${{ secrets.SITEGROUND_SSH_KEY }}
+          SSH_HOST: ${{ secrets.SITEGROUND_HOST }}
+          SSH_PORT: ${{ secrets.SITEGROUND_PORT }}
+          SSH_USER: ${{ secrets.SITEGROUND_USER }}
+          SITE_DIR: ${{ secrets.SITEGROUND_PATH }}
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' "$SSH_KEY" > ~/.ssh/siteground
+          chmod 600 ~/.ssh/siteground
+          ssh-keyscan -p "$SSH_PORT" "$SSH_HOST" >> ~/.ssh/known_hosts
+          # --ff-only: if the server's copy was edited by hand, fail instead of merging
+          ssh -i ~/.ssh/siteground -p "$SSH_PORT" "$SSH_USER@$SSH_HOST" \
+            "cd '$SITE_DIR' && git pull --ff-only origin main && git log --oneline -1"
