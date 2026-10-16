@@ -279,31 +279,38 @@ body:has(> .about) > * { width: 100%; }
   /* Home: photo sections side by side, with a header-height band below so
      the row sits centred in the window */
   .projects {
-    --u: calc((100dvh - 2 * var(--bar-h)) / 962);
+    /* card (1433) plus a 72 gap each side always fits the window width */
+    --u: min((100dvh - 2 * var(--bar-h)) / 962, 100vw / 1577);
     flex-direction: row;
+    align-items: center;
     gap: calc(72 * var(--u));
     padding: 0 calc(72 * var(--u)) var(--bar-h); /* same gap before the first and after the last */
     container-type: size;
   }
   .project {
-    --u: calc(100cqh / 962); /* exact height left after any scrollbar */
+    /* exact height left after any scrollbar, but leaving a gap each side */
+    --u: min(100cqh / 962, 100vw / 1577);
     flex: none;
-    height: 100%;
+    height: calc(962 * var(--u));
   }
 
   /* Galleries: plates (824 of the 970 under the header) are centred in the
-     whole window, not just the area under the header, but never tuck under it */
+     whole window, not just the area under the header (a header-height band
+     below balances the header), but never tuck under it ("safe") */
   .gallery {
-    --u: calc((100dvh - var(--bar-h)) / 970);
+    /* plates fill the height, but a plate (1242) plus a 73 gap each side
+       always fits the window width */
+    --u: min((100dvh - var(--bar-h)) / 970, 100vw / 1388);
     flex-direction: row;
-    align-items: flex-start;
-    padding: max(0px, (100dvh - 824 * var(--u)) / 2 - var(--bar-h)) calc(73 * var(--u)) 0;
+    align-items: safe center;
+    padding: 0 calc(73 * var(--u)) var(--bar-h);
   }
   .gallery > * { flex: none; }
   /* photos keep their own shape at plate height, so the gap is the same around portraits */
   .gallery .photo {
     width: auto;
-    height: calc(824 * var(--u));
+    /* photos a little wider than a plate shrink to the window width too */
+    height: min(calc(824 * var(--u)), (100vw - 146 * var(--u)) / (var(--ar)));
     aspect-ratio: var(--ar);
   }
   .gallery .statement { height: calc(824 * var(--u)); }
