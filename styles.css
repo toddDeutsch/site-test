@@ -216,23 +216,33 @@ footer.bar .menu { top: auto; bottom: 100%; }
 .about p { margin: 0; }
 p.new-stanza { margin-top: 1lh; } /* p. so it beats the margin reset above */
 
-/* About page */
+/* About page: the bio and contact line, centred as one block between header
+   and footer (auto margins rather than justify-content, so text taller than
+   the window still starts at the top instead of being cut off) */
+body:has(> .about) { /* header, about and footer fill the window exactly */
+  display: flex;
+  flex-direction: column;
+  min-height: 100svh;
+}
+body:has(> .about) > * { width: 100%; }
 .about {
-  /* fills the space between header and footer like the 1440×1024 frame */
-  min-height: calc(864 * var(--u));
+  flex: 1 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   max-width: var(--page-width);
   margin: 0 auto;
-  padding: calc(124 * var(--u)) calc(153 * var(--u)) calc(80 * var(--u)) calc(242 * var(--u));
-  font-family: "Julius Sans One", sans-serif;
-  font-size: max(12px, calc(14 * var(--u)));
+  padding: max(24px, calc(80 * var(--u))) max(16px, calc(97 * var(--u)));
+  /* same text style as the gallery statements: Jost Light 18 */
+  font-family: "Jost", sans-serif;
+  font-size: max(14px, calc(18 * var(--u)));
+  font-weight: 300;
   color: #000;
 }
-.about-bio { min-height: calc(438 * var(--u)); }
-.about-notes {
-  max-width: max(260px, calc(370 * var(--u)));
-  margin: calc(36 * var(--u)) 0 0 calc(25 * var(--u));
-}
-.about-notes p + p { margin-top: 1lh; }
+.about-bio, .about-notes { width: min(100%, max(600px, calc(1045 * var(--u)))); }
+.about-bio { margin-top: auto; }
+.about-notes { margin: 1lh 0 auto; }
+.about a { color: inherit; text-underline-offset: 0.2em; }
 .about + footer.bar { margin-bottom: 0; }
 
 /* Horizontal layout (every page has <body class="h-layout">): on landscape
@@ -299,17 +309,11 @@ p.new-stanza { margin-top: 1lh; } /* p. so it beats the margin reset above */
   .gallery .statement { height: calc(824 * var(--u)); }
   .gallery .statement-text { flex: 1; min-height: 0; overflow-y: auto; }
 
-  /* About: the 1440×944 area under the header, scaled to fit the height */
+  /* About: scaled to the height under the header, with a header-height
+     band below so the text is centred in the whole window */
   .about {
     --u: calc((100dvh - var(--bar-h)) / 944);
     min-height: 0;
-    padding-right: 0;
+    padding-bottom: calc(80 * var(--u) + var(--bar-h));
   }
-  .about::after { /* right margin that survives sideways scrolling */
-    content: "";
-    display: block;
-    width: calc(1198 * var(--u));
-    height: 1px;
-  }
-  .about-bio { width: calc(1045 * var(--u)); }
 }

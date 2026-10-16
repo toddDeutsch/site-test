@@ -173,17 +173,12 @@ for g in GALLERIES:
     gallery_page(*g)
 
 ABOUT = [
-    ("", "Lorem ipsum dolor sit amet consectetur. Sit aliquam elit enim mattis pellentesque senectus. Facilisis tincidunt facilisi laoreet in morbi sed. Lectus morbi duis semper cras. Vitae cursus volutpat sed amet. Lorem at tortor vitae tincidunt. Sagittis cursus vulputate sapien volutpat arcu fermentum ac fermentum. At dui ipsum egestas faucibus integer viverra sagittis. Eu adipiscing bibendum facilisis aenean ut nunc malesuada turpis vestibulum. Enim leo vel mi venenatis mauris vivamus mollis at lorem."),
-    ("", "Morbi cursus sem in at sed tincidunt odio purus. Fusce et mauris libero accumsan vulputate ligula orci volutpat. Massa potenti tempus vulputate nibh gravida adipiscing tortor vulputate ut. Ut donec varius natoque urna sagittis faucibus elit cursus nulla. Fringilla lacus nunc elit fermentum quis amet velit. Massa ipsum volutpat ipsum pulvinar lectus at. Malesuada adipiscing nunc ut placerat nisl neque ac."),
-    (' class="new-stanza"', "In in orci arcu facilisi aliquet pellentesque velit. Proin nunc lacus risus turpis. Cursus posuere purus vitae gravida ridiculus sem. Sit pulvinar vitae pellentesque interdum feugiat lectus donec fermentum habitant. Volutpat id ut lacinia placerat cras condimentum. Aliquet orci adipiscing sed eleifend pulvinar et sem morbi. Nulla mattis eu nullam elementum massa fermentum enim."),
-    ("", "Massa dui morbi ipsum mauris arcu. Vestibulum risus pellentesque duis ultrices facilisis tincidunt. Netus amet porttitor hac semper. Volutpat hac dui nec ut ut purus etiam. Et quam hac ipsum vehicula ultricies."),
-    (' class="new-stanza"', "Nec mauris vitae risus condimentum sed vulputate nisi leo. Enim accumsan sed ut diam est urna ut eu. Commodo pellentesque convallis adipiscing arcu nulla vestibulum. Rhoncus est dui varius purus consectetur et. Adipiscing turpis est pharetra viverra feugiat turpis."),
-    ("", "Lobortis quis facilisis adipiscing a pharetra sit commodo vel. Nunc amet lectus ut neque. Tincidunt in vitae ac amet viverra nullam. Turpis sapien sem nibh leo. Dictum nulla odio non sed in adipiscing non imperdiet semper. Mi nisl vitae eget morbi. Semper vulputate vitae."),
+    ("", "Todd Deutsch earned his MFA from Cranbrook Academy of Art in Bloomfield Hills, Michigan. His photographs have been exhibited nationally and internationally. His work has appeared in Real Simple (US), New Scientist (UK), Nido (Germany), Vision Magazine (China) and others, and is included in private and public collections including the Walker Art Center, the Museum of Contemporary Photography, and the Portland Art Museum. A monograph of his work titled Gamers was published by FP Editions, Brescia, Italy. Selections also appeared in Gamescenes: Art in the Age of Videogames, Johan &amp; Levi, Milan. He teaches in the Department of Art and Art History at Saint Catherine University, Saint Paul."),
 ]
-NOTES = ["Lorem ipsum dolor sit amet consectetur.", "Pellentesque magna lectus sed nulla sed risus.", "Dui cras quis gravida aliquam suscipit sapien."]
+NOTES = ['contact: <a href="mailto:todd@todddeutsch.com">todd@todddeutsch.com</a>']
 bio = "\n".join(f"      <p{c}>{t}</p>" for c, t in ABOUT)
 notes = "\n".join(f"      <p>{t}</p>" for t in NOTES)
-html = head("About — Todd Deutsch", "family=Julius+Sans+One") + bar("header", "about.html") + f'''
+html = head("About — Todd Deutsch", "family=Jost:wght@300&family=Julius+Sans+One") + bar("header", "about.html") + f'''
 
   <main class="about" tabindex="0">
     <div class="about-bio">
