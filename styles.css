@@ -171,7 +171,6 @@ footer.bar .menu { top: auto; bottom: 100%; }
   margin-top: 2lh;
   text-align: center;
 }
-.statement-text:has(.statement-art) { padding-bottom: calc(37 * var(--u)); }
 .statement-art img {
   width: max(120px, calc(194 * var(--u)));
   height: auto;
@@ -195,6 +194,9 @@ footer.bar .menu { top: auto; bottom: 100%; }
   flex-direction: column;
   background: var(--statement-bg, var(--plate-bg, #d2d2d2));
 }
+/* no statement text yet: the card is just its title ribbon, so the next
+   photo follows at the usual gap */
+.statement:not(:has(.statement-text)) { aspect-ratio: auto; }
 .statement-band {
   display: flex;
   align-items: center;
@@ -206,7 +208,8 @@ footer.bar .menu { top: auto; bottom: 100%; }
   font-weight: inherit;
 }
 .statement-text {
-  padding: calc(33 * var(--u)) calc(97 * var(--u)) calc(109 * var(--u));
+  /* the space under the text matches the space at the sides */
+  padding: calc(33 * var(--u)) calc(97 * var(--u)) calc(97 * var(--u));
   font-family: "Jost", sans-serif;
   font-size: max(14px, calc(18 * var(--u)));
   font-weight: var(--statement-weight, 300);
@@ -314,7 +317,8 @@ body:has(> .about) > * { width: 100%; }
     aspect-ratio: var(--ar);
   }
   .gallery .statement { height: calc(824 * var(--u)); }
-  .gallery .statement-text { flex: 1; min-height: 0; overflow-y: auto; }
+  .gallery .statement-text { flex: 1; min-height: 0; overflow-y: auto; padding-bottom: calc(109 * var(--u)); }
+  .gallery .statement-text:has(.statement-art) { padding-bottom: calc(37 * var(--u)); }
 
   /* About: scaled to the height under the header, with a header-height
      band below so the text is centred in the whole window */
