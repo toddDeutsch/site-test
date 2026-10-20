@@ -23,7 +23,7 @@ NAV = [("index.html", "Home"), ("driftless.html", "Driftless"), ("between-rivers
 
 # Projects left off the menus and the home page until they have photos.
 # Remove a slug here (and rebuild) to show it again; its gallery page is still built.
-HIDDEN = {"driftless"}
+HIDDEN = set()
 
 def bar(tag, current):
     cur = ' aria-current="page"'
@@ -41,7 +41,8 @@ def bar(tag, current):
     </nav>
   </{tag}>'''
 
-def head(title, fonts, scripts=("menu.js", "hscroll.js")):
+def head(title, fonts, scripts=("menu.js", "hscroll.js"), css=("styles.css",)):
+    css_tags = "".join(f'  <link rel="stylesheet" href="{c}">\n' for c in css)
     script_tags = "".join(f'  <script src="{js}" defer></script>\n' for js in scripts)
     return f'''<!doctype html>
 <html lang="en">
@@ -52,8 +53,7 @@ def head(title, fonts, scripts=("menu.js", "hscroll.js")):
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?{fonts}&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
-{script_tags}</head>
+{css_tags}{script_tags}</head>
 <body class="h-layout">
 '''
 
@@ -87,6 +87,15 @@ STATEMENTS = {
 
 # Photos in Figma order, from assets/<slug>/; galleries not listed here get 10 placeholder plates
 IMAGES = {
+    # random order for now
+    "driftless": [
+        "012126_05305", "032426_06138", "030926_0001434", "030426_0000957", "032526_0001804",
+        "100525_02718", "010526_04650", "083024_1007116", "100525_02705", "030426_0000769",
+        "080324_1006630", "022726_0000684", "012126_05391", "071824_1006308", "011326_05185",
+        "021326_0000490", "030426_0000782", "100525_02690", "030926_0001417", "012826_05943",
+        "010526_04723", "030426_0000840", "012126_05474", "011326_05172", "010526_04654",
+        "070324_1006113", "030426_0000770", "100525_02747", "020526_0000246", "010526_04730",
+    ],
     "between-rivers": [
         "020715_1010487_ff-edit-01", "011315_1009706_ff-edit-01", "012815_1010160_ff-edit-01",
         "011515_2470-edit-01", "053016_1013034", "012015_1009813-edit-01", "031115_1011037_ff-edit-1",
@@ -141,8 +150,8 @@ def jpeg_size(path):
         i += 2 + length
     raise ValueError(f"no size found in {path}")
 
-def gallery_page(slug, name, plate, card, band, ink, weight):
-    page = f"{slug}.html"
+def gallery_page(slug, name, plate, card, band, ink, weight, page=None, grid=False):
+    page = page or f"{slug}.html"
     paras = "\n".join(f"        <p{c}>{t}</p>" for c, t in STATEMENTS.get(slug, STATEMENT))
     text = f'      <div class="statement-text">\n{paras}\n      </div>\n' if paras else ""
     wstyle = f"; --statement-weight: {weight}" if weight else ""
@@ -156,9 +165,12 @@ def gallery_page(slug, name, plate, card, band, ink, weight):
     else:
         plates = "    <!-- Placeholder plates: list photos in IMAGES above to replace them -->\n" + \
             "\n".join('    <div class="plate"></div>' for _ in range(10))
-    html = head(f"{name} — Todd Deutsch", GALLERY_FONTS) + bar("header", page) + f'''
+    css = ("styles.css", "grid.css") if grid else ("styles.css",)
+    cls = "gallery grid" if grid else "gallery"
+    scripts = ("menu.js", "hscroll.js", "lightbox.js") if grid else ("menu.js", "hscroll.js")
+    html = head(f"{name} — Todd Deutsch", GALLERY_FONTS, scripts, css=css) + bar("header", page) + f'''
 
-  <main class="gallery" tabindex="0" aria-label="Gallery" style="--plate-bg: {plate}; --statement-bg: {card}; --band-bg: {band}; --title-color: {ink}{wstyle};">
+  <main class="{cls}" tabindex="0" aria-label="Gallery" style="--plate-bg: {plate}; --statement-bg: {card}; --band-bg: {band}; --title-color: {ink}{wstyle};">
     <section class="plate statement">
       <h1 class="statement-band"><span class="title">{name}</span></h1>
 {text}    </section>
@@ -171,6 +183,10 @@ def gallery_page(slug, name, plate, card, band, ink, weight):
 
 for g in GALLERIES:
     gallery_page(*g)
+
+# Test only: Driftless as a sideways-scrolling grid three photos high (grid.css).
+# Not linked from the menus or home page; open driftless-grid.html directly.
+gallery_page(*GALLERIES[0], page="driftless-grid.html", grid=True)
 
 ABOUT = [
     ("", "Todd Deutsch earned his MFA from Cranbrook Academy of Art in Bloomfield Hills, Michigan. His photographs have been exhibited nationally and internationally. His work has appeared in Real Simple (US), New Scientist (UK), Nido (Germany), Vision Magazine (China) and others, and is included in private and public collections including the Walker Art Center, the Museum of Contemporary Photography, and the Portland Art Museum. A monograph of his work titled Gamers was published by FP Editions, Brescia, Italy. Selections also appeared in Gamescenes: Art in the Age of Videogames, Johan &amp; Levi, Milan. He teaches in the Department of Art and Art History at Saint Catherine University, Saint Paul."),

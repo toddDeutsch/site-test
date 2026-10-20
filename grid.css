@@ -1,0 +1,67 @@
+/* Test layout for driftless-grid.html only: on wide landscape screens the
+   photos fill a grid three rows high that scrolls sideways. The three rows
+   together are as tall as a single gallery plate (824), so the statement card
+   beside them keeps its usual size. Narrower or portrait screens keep the
+   normal vertical stack from styles.css. */
+@media (min-width: 900px) and (orientation: landscape) {
+  .gallery.grid {
+    --grid-gap: calc(24 * var(--u));
+    --row: calc((824 * var(--u) - 2 * var(--grid-gap)) / 3);
+    display: grid;
+    grid-auto-flow: column;
+    grid-template-rows: repeat(3, var(--row));
+    grid-auto-columns: max-content;
+    gap: var(--grid-gap);
+    align-content: safe center;
+    justify-content: start;
+  }
+  .gallery.grid .statement {
+    grid-row: 1 / -1;
+    height: calc(824 * var(--u));
+    margin-right: calc(73 * var(--u) - var(--grid-gap)); /* usual gap after the card */
+  }
+  .gallery.grid .photo {
+    width: auto;
+    height: var(--row);
+  }
+}
+
+/* Photo overlay (lightbox.js): every photo in one sideways-scrolling row */
+.gallery.grid .photo { cursor: zoom-in; }
+.lightbox {
+  --m: max(16px, 4vmin); /* margin round each photo, and the gap between them */
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: rgba(255, 255, 255, 0.96);
+  cursor: zoom-out;
+}
+.lightbox::backdrop { background: none; }
+.lightbox-row {
+  display: flex;
+  align-items: center;
+  gap: var(--m);
+  height: 100%;
+  padding: 0 var(--m);
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior: contain;
+  container-type: size; /* the photos size to the space left above any scrollbar */
+}
+/* each photo fits the window, with the margin all round */
+.lightbox-row img {
+  flex: none;
+  width: auto;
+  height: min(100cqh - 2 * var(--m), 100cqw / (var(--ar))); /* the row padding is the side margin */
+  aspect-ratio: var(--ar);
+  cursor: grab;
+  user-select: none;
+}
+.lightbox-row.dragging,
+.lightbox-row.dragging img { cursor: grabbing; }
