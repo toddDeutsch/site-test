@@ -65,3 +65,7 @@
 }
 .lightbox-row.dragging,
 .lightbox-row.dragging img { cursor: grabbing; }
+/* top-right corner of a photo closes the overlay: black × with a white edge */
+.lightbox-row img.closer {
+  cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cpath d='M6 6l12 12M18 6L6 18' stroke='%23fff' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M6 6l12 12M18 6L6 18' stroke='%23000' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") 12 12, pointer;
+}

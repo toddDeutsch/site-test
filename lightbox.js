@@ -3,7 +3,7 @@
 // the chosen photo centred in the window. Each photo fits the window.
 // Scroll with a trackpad, mouse wheel, finger or by dragging with the mouse;
 // click a photo to centre it, arrow keys step one photo, and clicking the
-// background (or Esc) closes it.
+// background, a photo's top-right corner (or Esc) closes it.
 const photos = [...document.querySelectorAll("main img.photo")];
 const box = document.createElement("dialog");
 box.className = "lightbox";
@@ -67,10 +67,22 @@ row.addEventListener("pointerup", endPull);
 row.addEventListener("pointercancel", endPull);
 box.addEventListener("dragstart", (e) => e.preventDefault()); // no native image drag
 
+// The top-right corner of each photo is a close button: a square a fifth of
+// the photo's shorter side (at least 44px), shown by an × cursor.
+function inCorner(img, e) {
+  const r = img.getBoundingClientRect();
+  const size = Math.max(44, Math.min(r.width, r.height) / 5);
+  return e.clientX >= r.right - size && e.clientY <= r.top + size;
+}
+row.addEventListener("pointermove", (e) => {
+  for (const img of big) img.classList.toggle("closer", img === e.target && !pull?.moved && inCorner(img, e));
+});
+row.addEventListener("pointerleave", () => big.forEach((img) => img.classList.remove("closer")));
+
 box.addEventListener("click", (e) => {
   if (pull?.moved) return; // the click that ends a drag
-  if (e.target.parentElement === row) centre(e.target);
-  else box.close(); // the background
+  if (e.target.parentElement === row && !inCorner(e.target, e)) centre(e.target);
+  else box.close(); // the background, or a photo's close corner
 });
 
 // A mouse wheel scrolls the row sideways (a trackpad already does), and never
