@@ -41,7 +41,7 @@ def bar(tag, current):
     </nav>
   </{tag}>'''
 
-def head(title, fonts, scripts=("menu.js", "hscroll.js"), css=("styles.css",)):
+def head(title, fonts, scripts=("menu.js", "hscroll.js"), css=("styles.css",), unlisted=False):
     css_tags = "".join(f'  <link rel="stylesheet" href="{c}">\n' for c in css)
     script_tags = "".join(f'  <script src="{js}" defer></script>\n' for js in scripts)
     return f'''<!doctype html>
@@ -50,7 +50,7 @@ def head(title, fonts, scripts=("menu.js", "hscroll.js"), css=("styles.css",)):
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{title}</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
+{'  <meta name="robots" content="noindex">' + chr(10) if unlisted else ''}  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?{fonts}&display=swap" rel="stylesheet">
 {css_tags}{script_tags}</head>
@@ -168,7 +168,7 @@ def gallery_page(slug, name, plate, card, band, ink, weight, page=None, grid=Fal
     css = ("styles.css", "grid.css") if grid else ("styles.css",)
     cls = "gallery grid" if grid else "gallery"
     scripts = ("menu.js", "hscroll.js", "lightbox.js") if grid else ("menu.js", "hscroll.js")
-    html = head(f"{name} — Todd Deutsch", GALLERY_FONTS, scripts, css=css) + bar("header", page) + f'''
+    html = head(f"{name} — Todd Deutsch", GALLERY_FONTS, scripts, css=css, unlisted=grid) + bar("header", page) + f'''
 
   <main class="{cls}" tabindex="0" aria-label="Gallery" style="--plate-bg: {plate}; --statement-bg: {card}; --band-bg: {band}; --title-color: {ink}{wstyle};">
     <section class="plate statement">
