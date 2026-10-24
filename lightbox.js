@@ -2,8 +2,9 @@
 // every photo in one sideways-scrolling row, like the other galleries, with
 // the chosen photo centred in the window. Each photo fits the window.
 // Scroll with a trackpad, mouse wheel, finger or by dragging with the mouse;
-// click a photo to centre it, arrow keys step one photo, and clicking the
-// background, a photo's top-right corner (or Esc) closes it.
+// click a photo's right third for the next photo, its left third for the
+// previous one, its middle third to centre it; arrow keys step one photo, and
+// clicking the background, a photo's top-right corner (or Esc) closes it.
 const photos = [...document.querySelectorAll("main img.photo")];
 const box = document.createElement("dialog");
 box.className = "lightbox";
@@ -74,15 +75,28 @@ function inCorner(img, e) {
   const size = Math.max(44, Math.min(r.width, r.height) / 5);
   return e.clientX >= r.right - size && e.clientY <= r.top + size;
 }
+// What a click on a photo does: "close" in the corner, otherwise -1, 0 or 1
+// for its left, middle or right third (previous photo, centre it, next photo)
+function zone(img, e) {
+  if (inCorner(img, e)) return "close";
+  const r = img.getBoundingClientRect();
+  return Math.min(2, Math.floor((e.clientX - r.left) / (r.width / 3))) - 1;
+}
+// cursors show what a click will do
+const CURSOR = { close: "closer", "-1": "prev", 1: "next" };
 row.addEventListener("pointermove", (e) => {
-  for (const img of big) img.classList.toggle("closer", img === e.target && !pull?.moved && inCorner(img, e));
+  const z = e.target.parentElement === row && !pull?.moved ? CURSOR[zone(e.target, e)] : null;
+  for (const img of big) for (const c of ["closer", "prev", "next"]) img.classList.toggle(c, img === e.target && c === z);
 });
-row.addEventListener("pointerleave", () => big.forEach((img) => img.classList.remove("closer")));
+row.addEventListener("pointerleave", () => big.forEach((img) => img.classList.remove("closer", "prev", "next")));
 
 box.addEventListener("click", (e) => {
   if (pull?.moved) return; // the click that ends a drag
-  if (e.target.parentElement === row && !inCorner(e.target, e)) centre(e.target);
-  else box.close(); // the background, or a photo's close corner
+  if (e.target.parentElement !== row) return box.close(); // the background
+  const z = zone(e.target, e);
+  if (z === "close") return box.close();
+  const i = big.indexOf(e.target) + z;
+  centre(big[i] || e.target); // at either end, just centre this photo
 });
 
 // A mouse wheel scrolls the row sideways (a trackpad already does), and never
