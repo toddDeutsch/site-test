@@ -4,7 +4,9 @@
 // Scroll with a trackpad, mouse wheel, finger or by dragging with the mouse;
 // click a photo's right third for the next photo, its left third for the
 // previous one, its middle third to centre it; arrow keys step one photo, and
-// clicking the background, a photo's top-right corner (or Esc) closes it.
+// clicking the background in the top third of the window, a photo's
+// top-right corner (or Esc) closes it. Lower down, the background does nothing,
+// so a near miss between photos doesn't close the overlay.
 const photos = [...document.querySelectorAll("main img.photo")];
 const box = document.createElement("dialog");
 box.className = "lightbox";
@@ -84,15 +86,24 @@ function zone(img, e) {
 }
 // cursors show what a click will do
 const CURSOR = { close: "closer", "-1": "prev", 1: "next" };
+// the background closes the overlay only in the top third of the window
+const closesHere = (e) => e.target === row && e.clientY < innerHeight / 3;
 row.addEventListener("pointermove", (e) => {
   const z = e.target.parentElement === row && !pull?.moved ? CURSOR[zone(e.target, e)] : null;
   for (const img of big) for (const c of ["closer", "prev", "next"]) img.classList.toggle(c, img === e.target && c === z);
+  row.classList.toggle("closer", !pull?.moved && closesHere(e));
 });
-row.addEventListener("pointerleave", () => big.forEach((img) => img.classList.remove("closer", "prev", "next")));
+row.addEventListener("pointerleave", () => {
+  big.forEach((img) => img.classList.remove("closer", "prev", "next"));
+  row.classList.remove("closer");
+});
 
 box.addEventListener("click", (e) => {
   if (pull?.moved) return; // the click that ends a drag
-  if (e.target.parentElement !== row) return box.close(); // the background
+  if (e.target.parentElement !== row) { // the background
+    if (closesHere(e)) box.close();
+    return;
+  }
   const z = zone(e.target, e);
   if (z === "close") return box.close();
   const i = big.indexOf(e.target) + z;

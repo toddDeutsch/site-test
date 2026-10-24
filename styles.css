@@ -277,6 +277,9 @@ body:has(> .about) > * { width: 100%; }
   }
   body.h-layout > main.dragging { cursor: grabbing; user-select: none; }
   body.h-layout > main.dragging a { cursor: grabbing; }
+  /* arrows where a click steps the row (edges.js) */
+  body.h-layout > main.edge-next, body.h-layout > main.edge-next * { cursor: e-resize !important; }
+  body.h-layout > main.edge-prev, body.h-layout > main.edge-prev * { cursor: w-resize !important; }
   .statement-text { user-select: none; } /* dragging the text moves the view (hscroll.js) */
 
   /* Home: photo sections side by side, with a header-height band below so
