@@ -1,0 +1,75 @@
+// Horizontal layout: clicks that move the row back or forward, shown by arrow
+// cursors (only when there is further to go that way).
+// - Home page and galleries: clicking anywhere right of the main item's middle
+//   third (its right third, the gap, or the next card or photo peeking in)
+//   centres the next item; anywhere left of it, the previous one. The main
+//   item is the home page card, statement card or photo nearest the middle of
+//   the window. On the home page its middle third opens the project as usual.
+// - Driftless grid page: the far left or right of the window moves the grid
+//   one window width.
+// These clicks win over opening a card or photo, but a drag that ends there
+// still just drags (hscroll.js).
+{
+  const strip = document.querySelector("body.h-layout > main");
+  const sideways = matchMedia("(min-width: 900px) and (orientation: landscape)");
+  const byWindow = strip?.classList.contains("grid");
+  const EDGE = (w) => Math.max(48, w * 0.08); // width of each window edge zone
+  const items = !strip || byWindow ? []
+    : strip.classList.contains("projects") ? [...strip.querySelectorAll(".project")].filter((c) => !c.hidden)
+    : [...strip.querySelectorAll(":scope > .plate")]; // statement card and photos
+  let downX = null;
+
+  // the item nearest the middle of the window
+  function mainItem() {
+    const mid = strip.getBoundingClientRect().left + strip.clientWidth / 2;
+    const off = (c) => { const r = c.getBoundingClientRect(); return Math.abs(r.left + r.width / 2 - mid); };
+    return items.reduce((a, b) => (off(b) < off(a) ? b : a));
+  }
+  // the item to move to (or null): the next one for a click right of the main
+  // item's middle third, the previous one for a click left of it
+  function itemTarget(e) {
+    const main = mainItem();
+    const r = main.getBoundingClientRect();
+    const d = e.clientX > r.left + (r.width * 2) / 3 ? 1 : e.clientX < r.left + r.width / 3 ? -1 : 0;
+    return d ? items[items.indexOf(main) + d] || null : null;
+  }
+
+  // which way a click here moves the row: -1, 0 or 1
+  function dir(e) {
+    if (!sideways.matches || e.target.closest(".menu")) return 0;
+    if (!byWindow) {
+      const t = itemTarget(e);
+      return t ? Math.sign(items.indexOf(t) - items.indexOf(mainItem())) : 0;
+    }
+    const r = strip.getBoundingClientRect();
+    const w = EDGE(r.width);
+    if (e.clientX > r.right - w && strip.scrollLeft + strip.clientWidth < strip.scrollWidth - 1) return 1;
+    if (e.clientX < r.left + w && strip.scrollLeft > 0) return -1;
+    return 0;
+  }
+
+  function centreItem(item) {
+    const r = item.getBoundingClientRect();
+    const mid = strip.getBoundingClientRect().left + strip.clientWidth / 2;
+    strip.scrollBy({ left: r.left + r.width / 2 - mid, behavior: "smooth" });
+  }
+
+  strip?.addEventListener("pointermove", (e) => {
+    const d = strip.classList.contains("dragging") ? 0 : dir(e);
+    strip.classList.toggle("edge-next", d === 1);
+    strip.classList.toggle("edge-prev", d === -1);
+  });
+  const clear = () => strip.classList.remove("edge-next", "edge-prev");
+  strip?.addEventListener("scroll", clear); // rechecked on the next move
+  strip?.addEventListener("pointerleave", clear);
+  strip?.addEventListener("pointerdown", (e) => { downX = e.clientX; });
+  strip?.addEventListener("click", (e) => {
+    if (downX !== null && Math.abs(e.clientX - downX) > 5) return; // the end of a drag
+    const d = dir(e);
+    if (!d) return;
+    e.preventDefault(); // don't follow a card's link
+    e.stopPropagation(); // or open a photo
+    if (byWindow) strip.scrollBy({ left: d * strip.clientWidth, behavior: "smooth" });
+    else centreItem(itemTarget(e));
+  }, true);
+}

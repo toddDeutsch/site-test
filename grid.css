@@ -24,9 +24,6 @@
   }
   /* its right third jumps to the photos (grid.js) */
   .gallery.grid .statement.to-photos { cursor: e-resize; }
-  /* far left and right of the window page the grid by a window width (grid.js) */
-  .gallery.grid.edge-next, .gallery.grid.edge-next * { cursor: e-resize !important; }
-  .gallery.grid.edge-prev, .gallery.grid.edge-prev * { cursor: w-resize !important; }
   .gallery.grid .photo {
     width: auto;
     height: var(--row);
@@ -49,7 +46,6 @@
   padding: 0;
   border: 0;
   background: rgba(255, 255, 255, 0.96);
-  cursor: var(--close-cursor); /* the background closes it */
 }
 .lightbox::backdrop { background: none; }
 .lightbox-row {
@@ -62,7 +58,10 @@
   overflow-y: hidden;
   overscroll-behavior: contain;
   container-type: size; /* the photos size to the space left above any scrollbar */
+  cursor: grab;
 }
+/* the background closes the overlay, but only in the top third of the window */
+.lightbox-row.closer { cursor: var(--close-cursor); }
 /* each photo fits the window, with the margin all round */
 .lightbox-row img {
   flex: none;
