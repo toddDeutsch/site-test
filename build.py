@@ -167,7 +167,7 @@ def gallery_page(slug, name, plate, card, band, ink, weight, page=None, grid=Fal
             "\n".join('    <div class="plate"></div>' for _ in range(10))
     css = ("styles.css", "grid.css") if grid else ("styles.css",)
     cls = "gallery grid" if grid else "gallery"
-    scripts = ("menu.js", "hscroll.js", "lightbox.js") if grid else ("menu.js", "hscroll.js")
+    scripts = ("menu.js", "hscroll.js", "grid.js", "lightbox.js") if grid else ("menu.js", "hscroll.js")
     html = head(f"{name} — Todd Deutsch", GALLERY_FONTS, scripts, css=css, unlisted=grid) + bar("header", page) + f'''
 
   <main class="{cls}" tabindex="0" aria-label="Gallery" style="--plate-bg: {plate}; --statement-bg: {card}; --band-bg: {band}; --title-color: {ink}{wstyle};">

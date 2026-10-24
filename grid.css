@@ -14,12 +14,19 @@
     gap: var(--grid-gap);
     align-content: safe center;
     justify-content: start;
+    /* the statement card (1242 wide) starts centred in the window */
+    padding-left: max(73 * var(--u), (100vw - 1242 * var(--u)) / 2);
   }
   .gallery.grid .statement {
     grid-row: 1 / -1;
     height: calc(824 * var(--u));
     margin-right: calc(73 * var(--u) - var(--grid-gap)); /* usual gap after the card */
   }
+  /* its right third jumps to the photos (grid.js) */
+  .gallery.grid .statement.to-photos { cursor: e-resize; }
+  /* far left and right of the window page the grid by a window width (grid.js) */
+  .gallery.grid.edge-next, .gallery.grid.edge-next * { cursor: e-resize !important; }
+  .gallery.grid.edge-prev, .gallery.grid.edge-prev * { cursor: w-resize !important; }
   .gallery.grid .photo {
     width: auto;
     height: var(--row);
