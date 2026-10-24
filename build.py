@@ -23,7 +23,7 @@ NAV = [("index.html", "Home"), ("driftless.html", "Driftless"), ("between-rivers
 
 # Projects left off the menus and the home page until they have photos.
 # Remove a slug here (and rebuild) to show it again; its gallery page is still built.
-HIDDEN = set()
+HIDDEN = {"driftless"}
 
 def bar(tag, current):
     cur = ' aria-current="page"'
