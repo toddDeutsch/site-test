@@ -167,15 +167,15 @@ def gallery_page(slug, name, plate, card, band, ink, weight, page=None, grid=Fal
             "\n".join('    <div class="plate"></div>' for _ in range(10))
     css = ("styles.css", "grid.css") if grid else ("styles.css",)
     cls = "gallery grid" if grid else "gallery"
-    scripts = ("menu.js", "hscroll.js", "edges.js", "grid.js", "lightbox.js") if grid else ("menu.js", "hscroll.js", "edges.js")
+    scripts = ("menu.js", "hscroll.js", "loop.js", "edges.js", "grid.js", "lightbox.js") if grid else ("menu.js", "hscroll.js", "loop.js", "edges.js")
     html = head(f"{name} — Todd Deutsch", GALLERY_FONTS, scripts, css=css, unlisted=grid) + bar("header", page) + f'''
 
   <main class="{cls}" tabindex="0" aria-label="Gallery" style="--plate-bg: {plate}; --statement-bg: {card}; --band-bg: {band}; --title-color: {ink}{wstyle};">
+{plates}
+
     <section class="plate statement">
       <h1 class="statement-band"><span class="title">{name}</span></h1>
 {text}    </section>
-
-{plates}
   </main>
 
 ''' + bar("footer", page) + "\n" + TAIL
@@ -217,5 +217,5 @@ def hide_card(m):
     tag = m.group(0).replace(" hidden>", ">")
     return tag[:-1] + " hidden>" if m.group(1) in HIDDEN else tag
 main = re.sub(r'<a class="project[^>]* id="([^"]+)"[^>]*>', hide_card, main)
-html = head("Todd Deutsch", "family=Jost:wght@200&family=Julius+Sans+One", ("menu.js", "hscroll.js", "edges.js")) + bar("header", "index.html") + "\n\n" + main + "\n\n" + bar("footer", "index.html") + "\n" + TAIL
+html = head("Todd Deutsch", "family=Jost:wght@200&family=Julius+Sans+One", ("menu.js", "hscroll.js", "loop.js", "edges.js")) + bar("header", "index.html") + "\n\n" + main + "\n\n" + bar("footer", "index.html") + "\n" + TAIL
 open("index.html", "w").write(html)

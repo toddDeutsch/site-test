@@ -113,6 +113,10 @@ footer.bar .menu { top: auto; bottom: 100%; }
 }
 .project--landing { aspect-ratio: 1433 / 956; }
 .project[hidden] { display: none; } /* HIDDEN in build.py */
+/* loop.js copies: horizontal layout only */
+@media not all and (min-width: 900px) and (orientation: landscape) {
+  .copy { display: none !important; }
+}
 
 .project img {
   position: absolute;
@@ -286,22 +290,24 @@ body:has(> .about) > * { width: 100%; }
   body.h-layout > main.edge-next, body.h-layout > main.edge-next * { cursor: var(--next-cursor) !important; }
   body.h-layout > main.edge-prev, body.h-layout > main.edge-prev * { cursor: var(--prev-cursor) !important; }
   body.h-layout > main.edge-close, body.h-layout > main.edge-close * { cursor: var(--close-cursor) !important; }
+  /* rows that loop (loop.js) have no ends, so no scrollbar */
+  body.h-layout > main.loops { scrollbar-width: none; }
+  body.h-layout > main.loops::-webkit-scrollbar { display: none; }
   .statement-text { user-select: none; } /* dragging the text moves the view (hscroll.js) */
 
   /* Home: photo sections side by side, with a header-height band below so
-     the row sits centred in the window */
+     the row sits centred in the window. The centred card is at most 80% of
+     the window wide (and 85% of the height under the header), and the gaps
+     leave 5% of the cards before and after it in view. The row loops
+     (loop.js), so it has no end padding. */
   .projects {
-    /* card (1433) plus a 72 gap each side always fits the window width */
-    --u: min((100dvh - 2 * var(--bar-h)) / 962, 100vw / 1577);
+    --u: min(80vw / 1433, (100dvh - 2 * var(--bar-h)) * 0.85 / 962);
     flex-direction: row;
     align-items: center;
-    gap: calc(72 * var(--u));
-    padding: 0 calc(72 * var(--u)) var(--bar-h); /* same gap before the first and after the last */
-    container-type: size;
+    gap: calc((100vw - 1.1 * 1433 * var(--u)) / 2);
+    padding: 0 0 var(--bar-h);
   }
   .project {
-    /* exact height left after any scrollbar, but leaving a gap each side */
-    --u: min(100cqh / 962, 100vw / 1577);
     flex: none;
     height: calc(962 * var(--u));
   }

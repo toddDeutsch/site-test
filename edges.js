@@ -8,9 +8,8 @@
 //   instead of thirds; the rest of a home card opens the project as usual.
 // - Driftless grid page: the far left or right of the window moves the grid
 //   one window width.
-// - Galleries and the grid page: the left 15% of the statement card goes
-//   back to the home page (shown by the back arrow), and so does the band
-//   above the photos across the right 15% of the window (shown by an ×).
+// - Galleries and the grid page: the band above the photos, across the right
+//   15% of the window, goes back to the home page (shown by an ×).
 // These clicks win over opening a card or photo, but a drag that ends there
 // still just drags (hscroll.js).
 {
@@ -35,20 +34,9 @@
   function itemTarget(e) {
     const main = mainItem();
     const r = main.getBoundingClientRect();
-    const edge = main === card || onHome ? 0.15 : 1 / 3; // home cards and the statement card: only their outer 15%
+    const edge = main.classList.contains("statement") || onHome ? 0.15 : 1 / 3; // home cards and the statement card: only their outer 15%
     const d = e.clientX > r.right - r.width * edge ? 1 : e.clientX < r.left + r.width * edge ? -1 : 0;
     return d ? items[items.indexOf(main) + d] || null : null;
-  }
-
-  // the left 15% of a gallery's statement card goes back to the home page,
-  // while that strip is fully in view
-  const card = strip?.querySelector(":scope > .statement");
-  function toHome(e) {
-    if (!card || !sideways.matches) return false;
-    const r = card.getBoundingClientRect();
-    return r.left >= strip.getBoundingClientRect().left - 1 &&
-      e.clientX >= r.left && e.clientX < r.left + r.width * 0.15 &&
-      e.clientY >= r.top && e.clientY <= r.bottom;
   }
 
   // galleries: the band above the photos, across the right 15% of the window,
@@ -83,10 +71,9 @@
   strip?.addEventListener("pointermove", (e) => {
     const dragging = strip.classList.contains("dragging");
     const close = !dragging && toHomeCorner(e);
-    const home = !dragging && !close && toHome(e);
-    const d = dragging || close || home ? 0 : dir(e);
+    const d = dragging || close ? 0 : dir(e);
     strip.classList.toggle("edge-next", d === 1);
-    strip.classList.toggle("edge-prev", d === -1 || home);
+    strip.classList.toggle("edge-prev", d === -1);
     strip.classList.toggle("edge-close", close);
   });
   const clear = () => strip.classList.remove("edge-next", "edge-prev", "edge-close");
@@ -95,7 +82,7 @@
   strip?.addEventListener("pointerdown", (e) => { downX = e.clientX; });
   strip?.addEventListener("click", (e) => {
     if (downX !== null && Math.abs(e.clientX - downX) > 5) return; // the end of a drag
-    if (toHomeCorner(e) || toHome(e)) {
+    if (toHomeCorner(e)) {
       e.preventDefault();
       e.stopPropagation();
       location.href = "index.html";

@@ -7,7 +7,10 @@
 // clicking the background in the top third of the window, a photo's
 // top-right corner (or Esc) closes it. Lower down, the background does nothing,
 // so a near miss between photos doesn't close the overlay.
-const photos = [...document.querySelectorAll("main img.photo")];
+// The grid loops (loop.js): the overlay holds each photo once, and clicking
+// any copy of a photo opens that photo.
+const all = [...document.querySelectorAll("main img.photo")];
+const photos = all.filter((p) => !p.closest(".copy") && !p.classList.contains("copy"));
 const box = document.createElement("dialog");
 box.className = "lightbox";
 const row = document.createElement("div");
@@ -25,7 +28,8 @@ function centre(img, behavior = "smooth") {
   row.scrollTo({ left: img.offsetLeft + img.offsetWidth / 2 - row.clientWidth / 2, behavior });
 }
 
-photos.forEach((p, i) => p.addEventListener("click", () => {
+all.forEach((p) => p.addEventListener("click", () => {
+  const i = photos.findIndex((q) => q.getAttribute("src") === p.getAttribute("src"));
   box.showModal();
   centre(big[i], "instant");
 }));
