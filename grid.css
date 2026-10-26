@@ -22,8 +22,8 @@
     height: calc(824 * var(--u));
     margin-right: calc(73 * var(--u) - var(--grid-gap)); /* usual gap after the card */
   }
-  /* its right third jumps to the photos (grid.js) */
-  .gallery.grid .statement.to-photos { cursor: e-resize; }
+  /* its right 15% jumps to the photos (grid.js) */
+  .gallery.grid .statement.to-photos { cursor: var(--next-cursor); }
   .gallery.grid .photo {
     width: auto;
     height: var(--row);
@@ -34,8 +34,6 @@
 .gallery.grid .photo { cursor: zoom-in; }
 .lightbox {
   --m: max(16px, 4vmin); /* margin round each photo, and the gap between them */
-  /* black × with a white edge: clicking here closes the overlay */
-  --close-cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cpath d='M6 6l12 12M18 6L6 18' stroke='%23fff' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M6 6l12 12M18 6L6 18' stroke='%23000' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") 12 12, pointer;
   position: fixed;
   inset: 0;
   width: 100%;
@@ -74,7 +72,7 @@
 .lightbox-row.dragging,
 .lightbox-row.dragging img { cursor: grabbing; }
 /* left and right thirds of a photo step to the previous and next one */
-.lightbox-row img.prev { cursor: w-resize; }
-.lightbox-row img.next { cursor: e-resize; }
+.lightbox-row img.prev { cursor: var(--prev-cursor); }
+.lightbox-row img.next { cursor: var(--next-cursor); }
 /* so does the top-right corner of a photo */
 .lightbox-row img.closer { cursor: var(--close-cursor); }

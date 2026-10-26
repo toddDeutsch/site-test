@@ -9,6 +9,11 @@
   --bar-bg: rgba(0, 0, 0, 0.05);
   --placeholder: #e5e5e5;
   --gap: calc(72 * var(--u));
+  /* drawn ‹ › cursors (black with a white edge) wherever a click steps back or on */
+  --prev-cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cpath d='M15 4l-8 8 8 8' fill='none' stroke='%23fff' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M15 4l-8 8 8 8' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") 12 12, w-resize;
+  --next-cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cpath d='M9 4l8 8-8 8' fill='none' stroke='%23fff' stroke-width='5' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M9 4l8 8-8 8' fill='none' stroke='%23000' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") 12 12, e-resize;
+  /* black × with a white edge: wherever a click closes or leaves */
+  --close-cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Cpath d='M6 6l12 12M18 6L6 18' stroke='%23fff' stroke-width='5' stroke-linecap='round'/%3E%3Cpath d='M6 6l12 12M18 6L6 18' stroke='%23000' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E") 12 12, pointer;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -278,8 +283,9 @@ body:has(> .about) > * { width: 100%; }
   body.h-layout > main.dragging { cursor: grabbing; user-select: none; }
   body.h-layout > main.dragging a { cursor: grabbing; }
   /* arrows where a click steps the row (edges.js) */
-  body.h-layout > main.edge-next, body.h-layout > main.edge-next * { cursor: e-resize !important; }
-  body.h-layout > main.edge-prev, body.h-layout > main.edge-prev * { cursor: w-resize !important; }
+  body.h-layout > main.edge-next, body.h-layout > main.edge-next * { cursor: var(--next-cursor) !important; }
+  body.h-layout > main.edge-prev, body.h-layout > main.edge-prev * { cursor: var(--prev-cursor) !important; }
+  body.h-layout > main.edge-close, body.h-layout > main.edge-close * { cursor: var(--close-cursor) !important; }
   .statement-text { user-select: none; } /* dragging the text moves the view (hscroll.js) */
 
   /* Home: photo sections side by side, with a header-height band below so
