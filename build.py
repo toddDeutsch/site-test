@@ -87,14 +87,15 @@ STATEMENTS = {
 
 # Photos in Figma order, from assets/<slug>/; galleries not listed here get 10 placeholder plates
 IMAGES = {
-    # random order for now
+    # in reading order: on driftless-grid.html the first third fill the top row, left to right,
+    # the next third the middle row, the rest the bottom row (phones stack them in this order)
     "driftless": [
-        "083024_1007116", "030426_0000782", "020526_0000246", "100525_02690", "011326_05185",
-        "030426_0000770", "030426_0000957", "070324_1006113", "032426_06138", "010526_04730",
-        "011326_05172", "012126_05474", "030426_0000769", "012826_05943", "071824_1006308",
-        "080324_1006630", "021326_0000490", "022726_0000684", "010526_04723", "012126_05305",
-        "100525_02747", "030926_0001434", "012126_05391", "032526_0001804", "030926_0001417",
-        "030426_0000840", "100525_02718",
+        "083024_1007116", "100525_02690", "030426_0000957", "010526_04730", "030426_0000769",
+        "080324_1006630", "010526_04723", "030926_0001434", "030926_0001417", "030426_0000782",
+        "011326_05185", "070324_1006113", "011326_05172", "012826_05943", "021326_0000490",
+        "012126_05305", "012126_05391", "030426_0000840", "020526_0000246", "030426_0000770",
+        "032426_06138", "012126_05474", "071824_1006308", "022726_0000684", "100525_02747",
+        "032526_0001804", "100525_02718",
     ],
     "between-rivers": [
         "020715_1010487_ff-edit-01", "011315_1009706_ff-edit-01", "012815_1010160_ff-edit-01",
@@ -156,12 +157,17 @@ def gallery_page(slug, name, plate, card, band, ink, weight, page=None, grid=Fal
     text = f'      <div class="statement-text">\n{paras}\n      </div>\n' if paras else ""
     wstyle = f"; --statement-weight: {weight}" if weight else ""
     if slug in IMAGES:
+        per_row = -(-len(IMAGES[slug]) // 3)  # grid page: three rows, filled one row at a time
         def photo(i, f):
             src = f"assets/{slug}/{f}.jpg"
             w, h = jpeg_size(src)
-            return (f'    <img class="plate photo" src="{src}" width="{w}" height="{h}" style="--ar: {w} / {h}"'
+            row = f"; --grid-row: {(i - 1) // per_row + 1}" if grid else ""
+            return (f'    <img class="plate photo" src="{src}" width="{w}" height="{h}" style="--ar: {w} / {h}{row}"'
                     f' alt="{name}, photograph {i}" loading="lazy" decoding="async">')
         plates = "\n".join(photo(i, f) for i, f in enumerate(IMAGES[slug], 1))
+        if grid:  # a short bottom row is padded with empty cells
+            plates += "".join('\n    <div class="grid-filler" style="--grid-row: 3" aria-hidden="true"></div>'
+                              for _ in range(3 * per_row - len(IMAGES[slug])))
     else:
         plates = "    <!-- Placeholder plates: list photos in IMAGES above to replace them -->\n" + \
             "\n".join('    <div class="plate"></div>' for _ in range(10))

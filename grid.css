@@ -1,5 +1,8 @@
 /* Test layout for driftless-grid.html only: on wide landscape screens the
-   photos fill a grid three rows high that scrolls sideways. The three rows
+   photos fill a grid three rows high that scrolls sideways, one row at a
+   time in page order (build.py gives each photo its --grid-row; "dense" puts
+   each one in the first free cell of its row, so every looped copy of the
+   set lines up the same way). The three rows
    together are as tall as a single gallery plate (824), so the statement card
    beside them keeps its usual size. Narrower or portrait screens keep the
    normal vertical stack from styles.css. */
@@ -8,7 +11,7 @@
     --grid-gap: calc(24 * var(--u));
     --row: calc((824 * var(--u) - 2 * var(--grid-gap)) / 3);
     display: grid;
-    grid-auto-flow: column;
+    grid-auto-flow: column dense;
     grid-template-rows: repeat(3, var(--row));
     grid-auto-columns: max-content;
     gap: var(--grid-gap);
@@ -27,6 +30,12 @@
     width: auto;
     height: var(--row);
   }
+  .gallery.grid .photo,
+  .gallery.grid .grid-filler { grid-row: var(--grid-row); }
+}
+.grid-filler { display: none; } /* only takes up a cell in the grid */
+@media (min-width: 900px) and (orientation: landscape) {
+  .gallery.grid .grid-filler { display: block; }
 }
 
 /* Photo overlay (lightbox.js): every photo in one sideways-scrolling row */

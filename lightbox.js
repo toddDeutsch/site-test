@@ -9,6 +9,9 @@
 // so a near miss between photos doesn't close the overlay.
 // The grid loops (loop.js): the overlay holds each photo once, and clicking
 // any copy of a photo opens that photo.
+// The overlay goes through the photos in page order, which is the grid's
+// reading order: the top row left to right, then the middle row, then the
+// bottom (and the order phones stack them in).
 const all = [...document.querySelectorAll("main img.photo")];
 const photos = all.filter((p) => !p.closest(".copy") && !p.classList.contains("copy"));
 const box = document.createElement("dialog");
@@ -18,6 +21,7 @@ row.className = "lightbox-row";
 for (const p of photos) {
   const img = p.cloneNode();
   img.removeAttribute("class");
+  img.style.removeProperty("--grid-row");
   row.append(img);
 }
 box.append(row);
